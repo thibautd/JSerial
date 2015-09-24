@@ -57,3 +57,17 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# JSerial Specific
+*.opensdf
+*.filters
+*.sdf
+Debug
+Release
+build
+*.iml
+.gradle
+.idea
+gradle
+JSerial/gradlew
+JSerial/gradlew.bat

@@ -1,0 +1,33 @@
+group 'dk.thibaut'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+
+distributions {
+    main {
+        baseName = 'JSerial'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'net.java.dev.jna:jna:4.2.0'
+}
