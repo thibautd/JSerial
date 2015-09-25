@@ -1,6 +1,15 @@
 package dk.thibaut.serial;
 
+import dk.thibaut.serial.enums.BaudRate;
+import dk.thibaut.serial.enums.DataBits;
+import dk.thibaut.serial.enums.Parity;
+import dk.thibaut.serial.enums.StopBits;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.ClosedChannelException;
 import java.util.List;
 import java.util.Properties;
 
@@ -31,30 +40,55 @@ public abstract class SerialPort {
      * <p>
      * Internally, this class instantiate a subclass of {@link SerialPort}
      * according to the running platform, and opens the underlying port.
+     * <p>
+     * The port will remain opened until the underlying {@link SerialChannel}
+     * is closed, or the {@link #close()} method is called. A closed port cannot
+     * be opened again, you must get a new instance using this function.
      *
      * @param portName The platform-specific name of the port.
      * @return An opened {@link SerialPort}.
      * @throws IOException If a problem occurs while opening the port.
+     * @throws RuntimeException If the platform is not supported.
      */
     public static SerialPort open(String portName) throws IOException {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.startsWith("windows"))
             return new SerialPortWindows(portName);
-        return null;
+        throw new RuntimeException("Platform not supported by SerialPort.");
+    }
+
+    /**
+     * Returns an {@link InputStream} that can be used to read data.
+     *
+     * @return An InputStream
+     * @throws ClosedChannelException If the serial port is closed.
+     */
+    public InputStream getInputStream() throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
+        return Channels.newInputStream(getChannel());
+    }
+
+    public OutputStream getOutputStream() throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
+        return Channels.newOutputStream(getChannel());
+    }
+
+    public void setConfig(BaudRate b, Parity p, StopBits s, DataBits d) throws IOException {
+        setConfig(new SerialConfig(b, p, s, d));
     }
 
     public abstract void setConfig(SerialConfig config) throws IOException;
-
+    public abstract SerialConfig getConfig() throws IOException;
     public abstract void setTimeout(int timeout) throws IOException;
-
+    public abstract int getTimeout() throws IOException;
     public abstract SerialChannel getChannel() throws IOException;
 
     public abstract boolean isOpen();
-
     public abstract void close() throws IOException;
 
     protected String name;
-
     protected SerialPort(String portName) {
         this.name = name;
     }

@@ -11,17 +11,6 @@ import java.nio.ByteBuffer;
 
 class SerialChannelWindows implements SerialChannel {
 
-    static {
-        Native.register(SerialChannelWindows.class, NativeLibrary.getInstance(
-            "JSerial", W32APIOptions.UNICODE_OPTIONS));
-    }
-
-    private native static boolean NativeRead(Pointer handle, ByteBuffer buffer,
-         int numberOfBytes, IntByReference readBytes);
-    private native static boolean NativeWrite(Pointer handle, ByteBuffer buffer,
-         int numberOfBytes);
-    private native static boolean NativeClose(Pointer handle);
-
     private Pointer handle;
 
     SerialChannelWindows(Pointer handle) {
@@ -34,7 +23,7 @@ class SerialChannelWindows implements SerialChannel {
 
     public int read(ByteBuffer dst) throws IOException {
         IntByReference readBytesRef = new IntByReference(0);
-        if (!NativeRead(handle, dst, dst.remaining(), readBytesRef))
+        if (!SerialPortWindows.NativeRead(handle, dst, dst.remaining(), readBytesRef))
             throw SerialPortWindows.getLastException();
         int readBytes = readBytesRef.getValue();
         dst.position(dst.position() + readBytes);
@@ -43,7 +32,7 @@ class SerialChannelWindows implements SerialChannel {
 
     public int write(ByteBuffer src) throws IOException {
         int toWrite = src.remaining();
-        if (!NativeWrite(handle, src, src.remaining()))
+        if (!SerialPortWindows.NativeWrite(handle, src, src.remaining()))
             throw SerialPortWindows.getLastException();
         src.position(src.limit());
         return toWrite;
@@ -54,7 +43,7 @@ class SerialChannelWindows implements SerialChannel {
     }
 
     public void close() throws IOException {
-        if (!NativeClose(handle))
+        if (!SerialPortWindows.NativeClose(handle))
             throw SerialPortWindows.getLastException();
         handle = null;
     }
