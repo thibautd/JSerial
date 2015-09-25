@@ -31,7 +31,8 @@ Here is a simple example of use. This example will work with all the supported p
     
     // Read some data using your preferred solution
     byte[] byteBuffer = new byte[4096];
-    int n = istream.read(byteBuffer); // Will timeout after 100ms, returning 0 is no bytes where vailable.
+    // Will timeout after 100ms, returning 0 if no bytes were available.
+    int n = istream.read(byteBuffer);
     
     ByteBuffer buffer = ByteBuffer.allocate(4096);
     int c = channel.read(buffer);
