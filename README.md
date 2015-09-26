@@ -12,8 +12,9 @@ if you need help, contributions are really welcome (especially new platforms sup
 
 #Features
 
-* List, read and write to native Serial Ports (or USB CDC virtual ports)
+* Supports listing, reading and writing to serial ports
 * Configure port (baudrate, parity, stop bits, data bits)
+* Configure read timeout (milliseconds, infinite or non-blocking)
 * Supports Java NIO Buffers
 * Supports Java Streams
 
