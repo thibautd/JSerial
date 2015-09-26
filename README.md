@@ -1,6 +1,6 @@
 #JSerial
 
-JSerial aims to be an easy to use, well documented and cross-platform Serial library for Java.
+JSerial aims to be an *easy to use*, well *documented* and *cross-platform* Serial library for Java.
 
 Currently, the following platforms are supported :
 
@@ -9,6 +9,13 @@ Currently, the following platforms are supported :
 
 The code is easy to understand, documented and unit tested. If you want to contribute, please get in touch
 if you need help, contributions are really welcome (especially new platforms support !).
+
+#Features
+
+* List, read and write to native Serial Ports (or USB CDC virtual ports)
+* Configure port (baudrate, parity, stop bits, data bits)
+* Supports Java NIO Buffers
+* Supports Java Streams
 
 #Example
 
