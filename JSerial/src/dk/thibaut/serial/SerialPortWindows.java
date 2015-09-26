@@ -12,6 +12,7 @@ import dk.thibaut.serial.enums.StopBits;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.ClosedChannelException;
 
 class SerialPortWindows extends SerialPort {
@@ -56,6 +57,8 @@ class SerialPortWindows extends SerialPort {
         if (this.handle == Pointer.NULL)
             throw getLastException();
         this.channel = new SerialChannelWindows(handle);
+        this.inputStream = Channels.newInputStream(channel);
+        this.outputStream = Channels.newOutputStream(channel);
     }
 
     @Override

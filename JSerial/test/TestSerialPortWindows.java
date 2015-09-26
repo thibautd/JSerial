@@ -6,6 +6,7 @@ import dk.thibaut.serial.enums.BaudRate;
 import dk.thibaut.serial.enums.DataBits;
 import dk.thibaut.serial.enums.Parity;
 import dk.thibaut.serial.enums.StopBits;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
