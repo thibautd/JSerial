@@ -53,7 +53,7 @@ class SerialPortWindows extends SerialPort {
 
     SerialPortWindows(String portName) throws SerialException {
         super(portName);
-        this.handle = NativeOpen(portName);
+        this.handle = NativeOpen("\\\\.\\" + portName);
         if (this.handle == Pointer.NULL)
             throw getLastException();
         this.channel = new SerialChannelWindows(handle);
