@@ -199,10 +199,8 @@ LPTSTR* NativeGetAvailablePorts()
 			&numPorts, &maxNameLen, &maxValueLen, NULL, NULL) != ERROR_SUCCESS)
 		return NULL;
 
-	maxNameLen = maxNameLen * sizeof(TCHAR);
-	/* Sometimes (maybe a driver issue) the port name does not
-	 * include the null character. So we add it everytime. */
-	maxValueLen = (maxValueLen + 1) * sizeof(TCHAR);
+	maxNameLen = maxNameLen + sizeof(TCHAR);
+	maxValueLen = maxValueLen;
 
 	LPTSTR name = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, maxNameLen);
 	LPTSTR value = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, maxValueLen);
@@ -223,10 +221,10 @@ LPTSTR* NativeGetAvailablePorts()
 				&type, (LPBYTE)value, &valueLen) != ERROR_SUCCESS)
 			break;
 
-		/* We always allocate a character space for NULL character to avoid
-		 * some issue I've seen on some CDC adapters. */
-		LPTSTR portName = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
-			valueLen + sizeof(TCHAR));
+		if (type != REG_SZ)
+			continue;
+
+		LPTSTR portName = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, valueLen);
 
 		CopyMemory(portName, value, valueLen);
 		ZeroMemory(name, maxNameLen);
