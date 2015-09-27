@@ -199,7 +199,7 @@ LPTSTR* NativeGetAvailablePorts()
 			&numPorts, &maxNameLen, &maxValueLen, NULL, NULL) != ERROR_SUCCESS)
 		return NULL;
 
-	maxNameLen = maxNameLen + sizeof(TCHAR);
+	maxNameLen = maxNameLen + 1; // For NULL character
 	maxValueLen = maxValueLen;
 
 	LPTSTR name = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, maxNameLen);
@@ -235,6 +235,8 @@ LPTSTR* NativeGetAvailablePorts()
 
 	HeapFree(GetProcessHeap(), 0, name);
 	HeapFree(GetProcessHeap(), 0, value);
+
+	RegCloseKey(hKey);
 
 	return portsNames;
 }
