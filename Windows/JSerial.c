@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <tchar.h>
 
 #include "JSerial.h"
 
@@ -180,4 +181,72 @@ INT NativeGetTimeout(SerialHandle* handle)
 	if (handle->timeout.ReadIntervalTimeout == 0)
 		return TIMEOUT_IMMEDIATE;
 	return handle->timeout.ReadTotalTimeoutConstant;
+}
+
+LPTSTR* NativeGetAvailablePorts()
+{
+	HKEY hKey = NULL;
+
+	DWORD numPorts = 0;
+	DWORD maxNameLen = 0; // Max name lengths (in unicode chars, without null)
+	DWORD maxValueLen = 0; // Max value len (in bytes)
+
+	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, _T("HARDWARE\\DEVICEMAP\\SERIALCOMM"),
+			0, KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
+		return NULL;
+
+	if (RegQueryInfoKey(hKey, NULL, NULL, NULL, NULL, NULL, NULL,
+			&numPorts, &maxNameLen, &maxValueLen, NULL, NULL) != ERROR_SUCCESS)
+		return NULL;
+
+	maxNameLen = maxNameLen * sizeof(TCHAR);
+	/* Sometimes (maybe a driver issue) the port name does not
+	 * include the null character. So we add it everytime. */
+	maxValueLen = (maxValueLen + 1) * sizeof(TCHAR);
+
+	LPTSTR name = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, maxNameLen);
+	LPTSTR value = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, maxValueLen);
+	
+	/* The result is a NULL-terminated array of port names. */
+	LPTSTR* portsNames = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+		(numPorts + 1) * sizeof(TCHAR*));
+	
+	DWORD index = 0;
+
+	while (1)
+	{
+		DWORD type = 0;
+		DWORD nameLen = maxNameLen;
+		DWORD valueLen = maxValueLen;
+		
+		if (RegEnumValue(hKey, index, name, &nameLen, NULL,
+				&type, (LPBYTE)value, &valueLen) != ERROR_SUCCESS)
+			break;
+
+		/* We always allocate a character space for NULL character to avoid
+		 * some issue I've seen on some CDC adapters. */
+		LPTSTR portName = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+			valueLen + sizeof(TCHAR));
+
+		CopyMemory(portName, value, valueLen);
+		ZeroMemory(name, maxNameLen);
+		ZeroMemory(value, maxValueLen);
+
+		portsNames[index++] = portName;
+	}
+
+	HeapFree(GetProcessHeap(), 0, name);
+	HeapFree(GetProcessHeap(), 0, value);
+
+	return portsNames;
+}
+
+VOID NativeFreeAvailablePorts(LPTSTR* portsNames)
+{
+	LPTSTR* tmp = portsNames;
+	while (*portsNames != NULL) {
+		HeapFree(GetProcessHeap(), 0, *portsNames);
+		portsNames++;
+	}
+	HeapFree(GetProcessHeap(), 0, tmp);
 }

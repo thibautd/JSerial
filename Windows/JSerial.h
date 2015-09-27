@@ -40,6 +40,9 @@ DllExport BOOL NativeSetConfig(SerialHandle* handle);
 DllExport BOOL NativeSetTimeout(SerialHandle* handle, INT timeout);
 DllExport INT NativeGetTimeout(SerialHandle* handle);
 
+DllExport LPTSTR* NativeGetAvailablePorts();
+DllExport VOID NativeFreeAvailablePorts(LPTSTR*);
+
 #ifdef __cplusplus
 }
 #endif

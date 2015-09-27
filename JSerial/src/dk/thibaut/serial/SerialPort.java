@@ -8,10 +8,8 @@ import dk.thibaut.serial.enums.StopBits;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.Channels;
 import java.nio.channels.ClosedChannelException;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * This class represents a physical serial port.
@@ -48,7 +46,10 @@ public abstract class SerialPort {
      * @return A list of ports names.
      */
     public static List<String> getAvailablePorts() {
-        return null;
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.startsWith("windows"))
+            return SerialPortWindows.getAvailablePorts();
+        throw new RuntimeException("Platform not supported by SerialPort.");
     }
 
     /**

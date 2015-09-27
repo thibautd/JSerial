@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -108,6 +109,13 @@ public class TestSerialPortWindows {
         assertTrue(thread.isAlive());
         thread.join(20);
         assertFalse(thread.isAlive());
+    }
+
+    @Test
+    public void testGetPorts() {
+        List<String> portsNames = SerialPort.getAvailablePorts();
+        assertTrue(portsNames.contains(PORT_READ));
+        assertTrue(portsNames.contains(PORT_WRITE));
     }
 
 }

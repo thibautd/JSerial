@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ClosedChannelException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class SerialPortWindows extends SerialPort {
 
@@ -39,9 +42,20 @@ class SerialPortWindows extends SerialPort {
     native static boolean NativeSetConfig(Pointer handle);
     native static boolean NativeSetTimeout(Pointer handle, int timeout);
     native static int NativeGetTimeout(Pointer handle);
+    native static Pointer NativeGetAvailablePorts();
+    native static void NativeFreeAvailablePorts(Pointer portsNames);
 
     private Pointer handle;
     private SerialChannelWindows channel;
+
+    public static List<String> getAvailablePorts() {
+        Pointer portsNamesArray = NativeGetAvailablePorts();
+        List<String> portsNames = new ArrayList<>();
+        Collections.addAll(portsNames,
+            portsNamesArray.getWideStringArray(0));
+        NativeFreeAvailablePorts(portsNamesArray);
+        return portsNames;
+    }
 
     static SerialException getLastException() {
         int error = Native.getLastError();
