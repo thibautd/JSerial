@@ -15,14 +15,16 @@ import java.util.List;
  * This class represents a physical serial port.
  * <p>
  * You will never instantiate it directly, instead you must use the
- * {@link #getAvailablePorts} static function to retrieve a list of
+ * {@link #getAvailablePortsNames} static function to retrieve a list of
  * currently available ports name and get an instance of {@link SerialPort}
  * by calling the {@link #open(String)} static method.
  * <p>
  * You can configure the serial connection using {@link #setConfig(SerialConfig)}
  * and {@link #setTimeout}. After calling {@link #open(String)}, you can call
  * {@link #getChannel} to get the associated {@link SerialChannel}, and use it
- * to send and receive data.
+ * to send and receive data. If you prefer to use classic Java streams, both
+ * {@link #getOutputStream()} and {@link #getInputStream()} functions
+ * are available.
  */
 public abstract class SerialPort {
 
@@ -185,21 +187,37 @@ public abstract class SerialPort {
 
     /**
      * Set the RTS (Request To Send) signal.
+     *
+     * @param enabled The status of the line.
+     * @throws IOException If an error occurs when calling the native function.
+     * @throws ClosedChannelException If the serial port is closed.
      */
     public abstract void setRts(boolean enabled) throws IOException;
 
     /**
      * Set the DTR (Data Terminal Ready) signal.
+     *
+     * @param enabled The status of the line.
+     * @throws IOException If an error occurs when calling the native function.
+     * @throws ClosedChannelException If the serial port is closed.
      */
     public abstract void setDtr(boolean enabled) throws IOException;
 
     /**
      * Get the CTS (Clear to send) signal's state.
+     *
+     * @return The status of the CTS pin.
+     * @throws IOException If an error occurs when calling the native function.
+     * @throws ClosedChannelException If the serial port is closed.
      */
     public abstract boolean getCts() throws IOException;
 
     /**
      * Get the DSR (Data set ready) signal's state.
+     *
+     * @return The status of the DSR pin.
+     * @throws IOException If an error occurs when calling the native function.
+     * @throws ClosedChannelException If the serial port is closed.
      */
     public abstract boolean getDsr() throws IOException;
 

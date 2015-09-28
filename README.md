@@ -1,6 +1,6 @@
 # JSerial
 
-JSerial aims to be an **easy to use**, well **documented** and **cross-platform** serial library for Java. JSerial is distributed under the term of the LGPL.
+JSerial aims to be an **easy to use**, well **documented** and **cross-platform** serial library for Java. JSerial is distributed under the term of the MIT licence (you can use it in closed source applications).
 
 Currently, only the following platforms are supported :
 
@@ -16,6 +16,8 @@ You can download the latest available JAR, including all-supported platforms on 
 If you want to build from source, you will need gradle. Simply run ``gradle installDist`` in the ``JSerial`` directory to generate a jar file.
 
 Please note that JSerial uses [JNA](https://github.com/java-native-access/jna) (Java Native Access) to make native functions calls.
+
+**Windows Users :** The native DLL has been compiled with Visual Studio 2015, so you needto install [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-US/download/details.aspx?id=48145) ! Don't forget to install it, else it will not work.
 
 # Features
 
@@ -60,3 +62,13 @@ int c = channel.read(buffer);
 
 port.close();
 ```
+
+# Compiling native code
+
+If you want to rebuild the native libraries, all the source code is available. For Windows, you need to open the Visual Studio 2015 solution, and that's all. When you'll build the project, the output DLL will automatically be copied into the correct folder in the JSerial directory.
+
+# Contributing
+
+If you want to contribute, you can open the project with IntelliJ Community Edition IDE (for the Java part) by importing the project as a Gradle project.
+
+Contributions are welcome, and I can help you to get in touch with the code if you need help.

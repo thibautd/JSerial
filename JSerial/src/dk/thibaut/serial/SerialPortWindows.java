@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2015 Thibaut DIRLIK <thibaut.dirlik@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package dk.thibaut.serial;
 
 import com.sun.jna.Native;
@@ -191,18 +213,24 @@ class SerialPortWindows extends SerialPort {
 
     @Override
     public void setRts(boolean enabled) throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
         if (!NativeSetRts(handle, enabled))
             throw getLastException();
     }
 
     @Override
     public void setDtr(boolean enabled) throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
         if (!NativeSetDtr(handle, enabled))
             throw getLastException();
     }
 
     @Override
     public boolean getCts() throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
         IntByReference result = new IntByReference(0);
         if (!NativeGetCts(handle, result))
             throw getLastException();
@@ -211,6 +239,8 @@ class SerialPortWindows extends SerialPort {
 
     @Override
     public boolean getDsr() throws IOException {
+        if (!isOpen())
+            throw new ClosedChannelException();
         IntByReference result = new IntByReference(0);
         if (!NativeGetDsr(handle, result))
             throw getLastException();
