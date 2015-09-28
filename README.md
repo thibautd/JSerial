@@ -37,6 +37,9 @@ The Javadoc's documentation is available on http://thibautd.github.io/JSerial/.
 Here is a simple example of use. This example will work with all the supported platforms.
 
 ``` java
+import dk.thibaut.serial.SerialPort;
+import dk.thibaut.serial.enums.*;
+
 // Get a list of available ports names (COM2, COM4, ...)
 List<String> portsNames = SerialPort.getAvailablePortsNames();
 
@@ -52,11 +55,12 @@ port.setConfig(BaudRate.B115200, Parity.NONE, StopBits.ONE, DataBits.B8);
 SerialChannel channel = port.getChannel();
 InputStream istream = port.getInputStream()
 
-// Read some data using your preferred solution
+// Read some data using a stream
 byte[] byteBuffer = new byte[4096];
 // Will timeout after 100ms, returning 0 if no bytes were available.
 int n = istream.read(byteBuffer);
 
+// Read some data using a ByteBuffer.
 ByteBuffer buffer = ByteBuffer.allocate(4096);
 int c = channel.read(buffer);
 
