@@ -18,7 +18,8 @@ class SerialChannelWindows implements SerialChannel {
     }
 
     public void flush(boolean in, boolean out) throws IOException {
-
+        if (!SerialPortWindows.NativeFlush(handle, in, out))
+            throw SerialPortWindows.getLastException();
     }
 
     public int read(ByteBuffer dst) throws IOException {

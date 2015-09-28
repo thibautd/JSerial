@@ -41,7 +41,14 @@ DllExport BOOL NativeSetTimeout(SerialHandle* handle, INT timeout);
 DllExport INT NativeGetTimeout(SerialHandle* handle);
 
 DllExport LPTSTR* NativeGetAvailablePorts();
-DllExport VOID NativeFreeAvailablePorts(LPTSTR*);
+DllExport VOID NativeFreeAvailablePorts(LPTSTR* portsNames);
+
+DllExport BOOL NativeFlush(SerialHandle* handle, BOOL read, BOOL write);
+
+DllExport BOOL NativeSetRts(SerialHandle* handle, BOOL value);
+DllExport BOOL NativeSetDtr(SerialHandle* handle, BOOL value);
+DllExport BOOL NativeGetCts(SerialHandle* handle, LPBOOL result);
+DllExport BOOL NativeGetDsr(SerialHandle* handle, LPBOOL result);
 
 #ifdef __cplusplus
 }

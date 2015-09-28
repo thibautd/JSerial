@@ -113,9 +113,39 @@ public class TestSerialPortWindows {
 
     @Test
     public void testGetPorts() {
-        List<String> portsNames = SerialPort.getAvailablePorts();
+        List<String> portsNames = SerialPort.getAvailablePortsNames();
         assertTrue(portsNames.contains(PORT_READ));
         assertTrue(portsNames.contains(PORT_WRITE));
+    }
+
+    @Test
+    public void testSetRts() throws IOException {
+        portRead.setRts(true);
+        assertEquals(portWrite.getCts(), true);
+        portRead.setRts(false);
+        assertEquals(portWrite.getCts(), false);
+        portWrite.setRts(true);
+        assertEquals(portRead.getCts(), true);
+        portWrite.setRts(false);
+        assertEquals(portRead.getCts(), false);
+    }
+
+    @Test
+    public void testSetDtr() throws IOException {
+        portRead.setDtr(true);
+        assertEquals(portWrite.getDsr(), true);
+        portRead.setDtr(false);
+        assertEquals(portWrite.getDsr(), false);
+        portWrite.setDtr(true);
+        assertEquals(portRead.getDsr(), true);
+        portWrite.setDtr(false);
+        assertEquals(portRead.getDsr(), false);
+    }
+
+    @Test
+    public void testFlush() throws IOException {
+        /* Nothing easy to test, just test the call. */
+        portRead.getChannel().flush(true, true);
     }
 
 }

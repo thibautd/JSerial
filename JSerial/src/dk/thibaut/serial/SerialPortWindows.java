@@ -42,13 +42,18 @@ class SerialPortWindows extends SerialPort {
     native static boolean NativeSetConfig(Pointer handle);
     native static boolean NativeSetTimeout(Pointer handle, int timeout);
     native static int NativeGetTimeout(Pointer handle);
+    native static boolean NativeSetRts(Pointer handle, boolean value);
+    native static boolean NativeSetDtr(Pointer handle, boolean value);
+    native static boolean NativeGetCts(Pointer handle, IntByReference result);
+    native static boolean NativeGetDsr(Pointer handle, IntByReference result);
+    native static boolean NativeFlush(Pointer handle, boolean flushRx, boolean flushTx);
     native static Pointer NativeGetAvailablePorts();
     native static void NativeFreeAvailablePorts(Pointer portsNames);
 
     private Pointer handle;
     private SerialChannelWindows channel;
 
-    public static List<String> getAvailablePorts() {
+    public static List<String> getAvailablePortsNames() {
         Pointer portsNamesArray = NativeGetAvailablePorts();
         List<String> portsNames = new ArrayList<>();
         Collections.addAll(portsNames,
@@ -182,5 +187,33 @@ class SerialPortWindows extends SerialPort {
     @Override
     public void close() throws IOException {
         channel.close();
+    }
+
+    @Override
+    public void setRts(boolean enabled) throws IOException {
+        if (!NativeSetRts(handle, enabled))
+            throw getLastException();
+    }
+
+    @Override
+    public void setDtr(boolean enabled) throws IOException {
+        if (!NativeSetDtr(handle, enabled))
+            throw getLastException();
+    }
+
+    @Override
+    public boolean getCts() throws IOException {
+        IntByReference result = new IntByReference(0);
+        if (!NativeGetCts(handle, result))
+            throw getLastException();
+        return result.getValue() == 1;
+    }
+
+    @Override
+    public boolean getDsr() throws IOException {
+        IntByReference result = new IntByReference(0);
+        if (!NativeGetDsr(handle, result))
+            throw getLastException();
+        return result.getValue() == 1;
     }
 }

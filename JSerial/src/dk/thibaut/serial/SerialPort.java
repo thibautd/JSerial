@@ -45,10 +45,10 @@ public abstract class SerialPort {
      *
      * @return A list of ports names.
      */
-    public static List<String> getAvailablePorts() {
+    public static List<String> getAvailablePortsNames() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.startsWith("windows"))
-            return SerialPortWindows.getAvailablePorts();
+            return SerialPortWindows.getAvailablePortsNames();
         throw new RuntimeException("Platform not supported by SerialPort.");
     }
 
@@ -182,5 +182,25 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      */
     public abstract void close() throws IOException;
+
+    /**
+     * Set the RTS (Request To Send) signal.
+     */
+    public abstract void setRts(boolean enabled) throws IOException;
+
+    /**
+     * Set the DTR (Data Terminal Ready) signal.
+     */
+    public abstract void setDtr(boolean enabled) throws IOException;
+
+    /**
+     * Get the CTS (Clear to send) signal's state.
+     */
+    public abstract boolean getCts() throws IOException;
+
+    /**
+     * Get the DSR (Data set ready) signal's state.
+     */
+    public abstract boolean getDsr() throws IOException;
 
 }

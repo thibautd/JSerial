@@ -47,6 +47,9 @@ SerialHandle* NativeOpen(LPTSTR portName)
 	if (!GetCommState(nativeHandle, &handle->config))
 		goto error;
 
+	if (!SetCommState(handle->native, &handle->config))
+		goto error;
+
 	if (!GetCommTimeouts(nativeHandle, &handle->timeout))
 		goto error;
 
@@ -249,4 +252,42 @@ VOID NativeFreeAvailablePorts(LPTSTR* portsNames)
 		portsNames++;
 	}
 	HeapFree(GetProcessHeap(), 0, tmp);
+}
+
+BOOL NativeFlush(SerialHandle* handle, BOOL read, BOOL write)
+{
+	DWORD flags = 0;
+	if (read)
+		flags |= PURGE_RXCLEAR;
+	if (write)
+		flags |= PURGE_TXCLEAR;
+	return PurgeComm(handle->native, flags);
+}
+
+BOOL NativeSetRts(SerialHandle* handle, BOOL value)
+{
+	return EscapeCommFunction(handle->native, value ? SETRTS : CLRRTS);
+}
+
+BOOL NativeSetDtr(SerialHandle* handle, BOOL value)
+{
+	return EscapeCommFunction(handle->native, value ? SETDTR : CLRDTR);
+}
+
+BOOL NativeGetCts(SerialHandle* handle, LPBOOL result)
+{
+	DWORD status = 0;
+	if (!GetCommModemStatus(handle->native, &status))
+		return FALSE;
+	*result = (status & MS_CTS_ON) == MS_CTS_ON;
+	return TRUE;
+}
+
+BOOL NativeGetDsr(SerialHandle* handle, LPBOOL result)
+{
+	DWORD status = 0;
+	if (!GetCommModemStatus(handle->native, &status))
+		return FALSE;
+	*result = (status & MS_DSR_ON) == MS_DSR_ON;
+	return TRUE;
 }
