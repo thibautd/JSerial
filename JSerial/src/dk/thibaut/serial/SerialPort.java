@@ -8,6 +8,9 @@ import dk.thibaut.serial.enums.StopBits;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.channels.ClosedChannelException;
 import java.util.List;
 
@@ -28,8 +31,32 @@ import java.util.List;
  */
 public abstract class SerialPort {
 
+    private static Class nativeClass;
+    private static Constructor nativeConstructor;
+    private static Method nativeGetAvailablePorts;
+
     public static final int TIMEOUT_INFINITE = -1;
     public static final int TIMEOUT_IMMEDIATE = 0;
+
+    static {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.startsWith("windows"))
+            nativeClass = SerialPortWindows.class;
+        else if (os.startsWith("linux"))
+            nativeClass = SerialPortLinux.class;
+        else
+            throw new RuntimeException("Unsupported platform");
+
+        try {
+            nativeGetAvailablePorts = nativeClass.getDeclaredMethod("getAvailablePortsNamesImpl");
+            nativeGetAvailablePorts.setAccessible(true);
+            nativeConstructor = nativeClass.getDeclaredConstructor(String.class);
+            nativeConstructor.setAccessible(true);
+        } catch (Exception err) {
+            throw new RuntimeException("Error while loading native class", err);
+        }
+    }
 
     protected InputStream inputStream;
     protected OutputStream outputStream;
@@ -48,10 +75,11 @@ public abstract class SerialPort {
      * @return A list of ports names.
      */
     public static List<String> getAvailablePortsNames() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.startsWith("windows"))
-            return SerialPortWindows.getAvailablePortsNames();
-        throw new RuntimeException("Platform not supported by SerialPort.");
+        try {
+            return (List<String>) nativeGetAvailablePorts.invoke(null);
+        } catch (IllegalAccessException|InvocationTargetException err) {
+            throw new RuntimeException("Unexpected error while invoking native method.", err);
+        }
     }
 
     /**
@@ -70,10 +98,13 @@ public abstract class SerialPort {
      * @throws RuntimeException If the platform is not supported.
      */
     public static SerialPort open(String portName) throws IOException {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.startsWith("windows"))
-            return new SerialPortWindows(portName);
-        throw new RuntimeException("Platform not supported by SerialPort.");
+        try {
+            return (SerialPort) nativeConstructor.newInstance(portName);
+        } catch (InstantiationException|IllegalAccessException err) {
+            throw new RuntimeException("Unexpected error while invoking native constructor.", err);
+        } catch (InvocationTargetException err) {
+            throw (IOException) err.getTargetException();
+        }
     }
 
     /**

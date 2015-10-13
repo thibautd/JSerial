@@ -52,12 +52,28 @@ import static org.junit.Assert.*;
  * Once your software is configured, configure both PORT_READ and PORT_WRITE
  * constants to virtual port names. Test will write data on PORT_WRITE
  * and read it from PORT_READ to test different functions and errors.
+ *
+ * For Linux, I run unit test in Virtual Box with my virtual windows ports
+ * mapped to /dev/ttyS0 and /dev/ttyS1. It's a complex setup, but at least
+ * we can test real system calls.
  */
 
-public class TestSerialPortWindows {
+public class TestSerialPort {
 
-    private static final String PORT_READ = "COM2";
-    private static final String PORT_WRITE = "COM4";
+    static {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.startsWith("windows")) {
+            PORT_READ = "COM2";
+            PORT_WRITE = "COM4";
+        } else if (os.contains("linux")) {
+            PORT_READ = "/dev/ttyS0";
+            PORT_WRITE = "/dev/ttyS1";
+        }
+    }
+
+    private static String PORT_READ;
+    private static String PORT_WRITE;
+
     private static final SerialConfig DEFAULT_CONFIG = new SerialConfig(
         BaudRate.B115200, Parity.NONE, StopBits.ONE, DataBits.D8);
 
