@@ -75,7 +75,7 @@ class SerialPortWindows extends SerialPort {
     private Pointer handle;
     private SerialChannelWindows channel;
 
-    public static List<String> getAvailablePortsNames() {
+    public static List<String> getAvailablePortsNamesImpl() {
         Pointer portsNamesArray = NativeGetAvailablePorts();
         List<String> portsNames = new ArrayList<>();
         Collections.addAll(portsNames,
