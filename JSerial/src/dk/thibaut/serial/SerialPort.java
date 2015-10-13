@@ -158,6 +158,9 @@ public abstract class SerialPort {
 
     /**
      * Get the current read timeout.
+     * <p>
+     * The default timeout is always {@link #TIMEOUT_INFINITE}.
+     *
      * @return The timeout (in milliseconds) or one of the special
      *      values {@link #TIMEOUT_INFINITE} or {@link #TIMEOUT_IMMEDIATE}
      * @throws IOException If an error occurs when calling the native function.
