@@ -53,6 +53,9 @@ SerialHandle* NativeOpen(LPTSTR portName)
 	if (!GetCommTimeouts(nativeHandle, &handle->timeout))
 		goto error;
 
+	if (!PurgeComm(nativeHandle, PURGE_TXCLEAR | PURGE_RXCLEAR | PURGE_RXABORT | PURGE_TXABORT))
+		goto error;
+
 	/* Sets default timeout to infinite timeout. This should be the
 	 * expected default behavior for an opened port, like a socket. */
 	if (!NativeSetTimeout(handle, TIMEOUT_INFINITE))
