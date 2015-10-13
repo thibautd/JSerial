@@ -170,4 +170,20 @@ public class TestSerialPortWindows {
         portRead.getChannel().flush(true, true);
     }
 
+    @Test
+    public void testName() {
+        assertEquals(portRead.getName(), PORT_READ);
+        assertEquals(portWrite.getName(), PORT_WRITE);
+    }
+
+    @Test
+    public void testTimeout() throws IOException {
+        portRead.setTimeout(SerialPort.TIMEOUT_IMMEDIATE);
+        assertEquals(portRead.getTimeout(), SerialPort.TIMEOUT_IMMEDIATE);
+        portRead.setTimeout(SerialPort.TIMEOUT_INFINITE);
+        assertEquals(portRead.getTimeout(), SerialPort.TIMEOUT_INFINITE);
+        portRead.setTimeout(1337);
+        assertEquals(portRead.getTimeout(), 1337);
+    }
+
 }

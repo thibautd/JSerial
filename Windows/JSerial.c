@@ -181,7 +181,7 @@ INT NativeGetTimeout(SerialHandle* handle)
 {
 	if (handle->timeout.ReadIntervalTimeout == 10)
 		return TIMEOUT_INFINITE;
-	if (handle->timeout.ReadIntervalTimeout == 0)
+	if (handle->timeout.ReadIntervalTimeout == MAXDWORD)
 		return TIMEOUT_IMMEDIATE;
 	return handle->timeout.ReadTotalTimeoutConstant;
 }

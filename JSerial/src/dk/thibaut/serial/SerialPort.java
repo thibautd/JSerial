@@ -36,7 +36,7 @@ public abstract class SerialPort {
     protected String name;
 
     protected SerialPort(String portName) {
-        this.name = name;
+        this.name = portName;
     }
 
     /**
@@ -74,6 +74,15 @@ public abstract class SerialPort {
         if (os.startsWith("windows"))
             return new SerialPortWindows(portName);
         throw new RuntimeException("Platform not supported by SerialPort.");
+    }
+
+    /**
+     * Get the port name.
+     * <p>
+     * @return The value passed to {@link SerialPort#open(String)}.
+     */
+    public String getName() {
+        return this.name;
     }
 
     /**
