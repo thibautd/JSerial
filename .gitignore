@@ -71,3 +71,4 @@ build
 gradle
 JSerial/gradlew
 JSerial/gradlew.bat
+*.suo

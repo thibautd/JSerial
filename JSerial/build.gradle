@@ -1,5 +1,5 @@
 group 'dk.thibaut'
-version '1.0.1'
+version '1.0.2'
 
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
@@ -43,7 +43,6 @@ jacocoTestReport {
 
 javadoc.options.links("http://docs.oracle.com/javase/7/docs/api/");
 javadoc.options.showFromPublic()
-
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
