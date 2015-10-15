@@ -1,5 +1,10 @@
 # JSerial
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://thibautd.mit-license.org/)
+[![Release](https://img.shields.io/github/release/thibautd/JSerial.svg)](https://github.com/thibautd/JSerial/releases/latest)
+![Windows](https://img.shields.io/badge/platform-windows-brightgreen.svg)
+![Linux](https://img.shields.io/badge/platform-linux-orange.svg)
+
 JSerial aims to be an **easy to use**, well **documented** and **cross-platform** serial library for Java. JSerial is distributed under the term of the MIT licence (you can use it in closed source applications).
 
 Currently, only the following platforms are supported :
