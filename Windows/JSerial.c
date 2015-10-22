@@ -230,7 +230,9 @@ LPTSTR* NativeGetAvailablePorts()
 		if (type != REG_SZ)
 			continue;
 
-		LPTSTR portName = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, valueLen);
+		/* Allocates one more NULL character. Sometimes there isn't the NULL
+		 * character at the end of the string (maybe driver issue ? dunno) */
+		LPTSTR portName = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, valueLen + sizeof(TCHAR));
 
 		CopyMemory(portName, value, valueLen);
 		ZeroMemory(name, maxNameLen);
