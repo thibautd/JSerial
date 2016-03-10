@@ -20,13 +20,24 @@
  * THE SOFTWARE.
  */
 
-package dk.thibaut.serial.enums;
+package dk.thibaut.serial.spi;
 
-public enum Parity {
-    UNKNOWN,
-    NONE,
-    ODD,
-    EVEN,
-    MARK,
-    SPACE;
+import java.util.List;
+import java.util.ServiceLoader;
+
+import dk.thibaut.serial.SerialPort;
+
+/**
+ * This interface must be implemented by platform providers.
+ * <p>
+ * The {@link SerialPort} class will use a {@link ServiceLoader} to find an
+ * implementation of this interface at runtime and use it to handle the
+ * platform-specific {@link SerialPort} methods.
+ * 
+ * @since 1.1
+ * @author Thibaut DIRLIK
+ */
+public interface SerialPortPlatformProvider {
+    public List<String> getAvailablePortsNames();
+    public SerialPort open(String portName);
 }

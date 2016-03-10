@@ -20,37 +20,14 @@
  * THE SOFTWARE.
  */
 
-package dk.thibaut.serial.enums;
+package dk.thibaut.serial;
 
-public enum BaudRate {
-
-    UNKNOWN(0),
-    B256000(256000),
-    B115200(115200),
-    B57600(57600),
-    B38400(38400),
-    B19200(19200),
-    B9600(9600);
-
-    private int value;
-
-    public static BaudRate fromInteger(int value) {
-        for (BaudRate b : BaudRate.values())
-            if (b.value == value)
-                return b;
-        return UNKNOWN;
-    }
-
-    BaudRate(int value) {
-        this.value = value;
-    }
-
-    public int toInteger() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return Integer.toString(value);
-    }
+/**
+ * A {@link SerialPort} implementation for windows x86/x64.
+ * 
+ * @since 1.1
+ * @author Thibaut DIRLIK
+ */
+public class SerialPortWindows extends SerialPort {
+    
 }

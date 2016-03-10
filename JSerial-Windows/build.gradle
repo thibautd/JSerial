@@ -2,3 +2,7 @@ group 'dk.thibaut'
 version '1.1.0-SNAPSHOT'
 
 apply from: '../JSerial-Common.gradle'
+
+dependencies {
+    compile 'dk.thibaut:jserial:1.1.0-SNAPSHOT'
+}

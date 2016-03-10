@@ -20,23 +20,13 @@
  * THE SOFTWARE.
  */
 
-package dk.thibaut.serial.enums;
+package dk.thibaut.serial;
 
-public enum StopBits {
-
-    UNKNOWN("Unknown"),
-    ONE("1"),
-    ONE_HALF("1.5"),
-    TWO("2");
-
-    private String value;
-
-    StopBits(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
+/**
+ *
+ * @since 1.1
+ * @author Thibaut (Fixe)
+ */
+public class SerialPortWindowsProvider implements SerialPortPlatformProvider {
+    
 }

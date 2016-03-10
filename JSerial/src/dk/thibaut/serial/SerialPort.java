@@ -1,9 +1,5 @@
 package dk.thibaut.serial;
 
-import dk.thibaut.serial.enums.BaudRate;
-import dk.thibaut.serial.enums.DataBits;
-import dk.thibaut.serial.enums.Parity;
-import dk.thibaut.serial.enums.StopBits;
 
 import java.io.IOException;
 import java.io.InputStream;

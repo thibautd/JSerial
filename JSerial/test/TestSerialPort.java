@@ -24,10 +24,10 @@ import dk.thibaut.serial.SerialConfig;
 import dk.thibaut.serial.SerialException;
 import dk.thibaut.serial.SerialPort;
 
-import dk.thibaut.serial.enums.BaudRate;
-import dk.thibaut.serial.enums.DataBits;
-import dk.thibaut.serial.enums.Parity;
-import dk.thibaut.serial.enums.StopBits;
+import dk.thibaut.serial.BaudRate;
+import dk.thibaut.serial.DataBits;
+import dk.thibaut.serial.Parity;
+import dk.thibaut.serial.StopBits;
 
 import org.junit.After;
 import org.junit.Before;

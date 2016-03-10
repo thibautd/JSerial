@@ -22,35 +22,21 @@
 
 package dk.thibaut.serial;
 
-/**
- * This class represent the configuration of a serial port.
- * <p>
- * It's use by the {@link SerialPort#setConfig(SerialConfig)} function
- * to set the configuration (baudrate, parity, stopbits and databits)
- * of the srial connection.
- * <p>
- * You can also get an instance of this object by calling the
- * {@link SerialPort#getConfig()} method to access the current
- * port configuration.
- */
-public class SerialConfig {
+public enum StopBits {
 
-    public BaudRate BaudRate;
-    public Parity Parity;
-    public StopBits StopBits;
-    public DataBits DataBits;
+    UNKNOWN("Unknown"),
+    ONE("1"),
+    ONE_HALF("1.5"),
+    TWO("2");
 
-    public SerialConfig(BaudRate b, Parity p, StopBits s, DataBits d) {
-        BaudRate = b;
-        Parity = p;
-        StopBits = s;
-        DataBits = d;
+    private String value;
+
+    StopBits(String value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return String.format("SerialConfig(BaudRate=%s, Parity=%s, StopBits=%s, DataBits=%s",
-            BaudRate, Parity, StopBits, DataBits);
+        return value;
     }
-
 }

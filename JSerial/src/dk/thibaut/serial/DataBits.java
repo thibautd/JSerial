@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package dk.thibaut.serial.enums;
+package dk.thibaut.serial;
 
 public enum DataBits {
 

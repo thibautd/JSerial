@@ -27,10 +27,6 @@ import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.W32APIOptions;
-import dk.thibaut.serial.enums.BaudRate;
-import dk.thibaut.serial.enums.DataBits;
-import dk.thibaut.serial.enums.Parity;
-import dk.thibaut.serial.enums.StopBits;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
