@@ -1,0 +1,3 @@
+include 'JSerial-API'
+include 'JSerial-Windows'
+include 'JSerial-Linux'

@@ -1,11 +1,7 @@
 #ifndef JSERIAL_JSERIAL_H
 #define JSERIAL_JSERIAL_H
 
-typedef struct serial_handle serial_handle_t;
-
-char** NativeGetAvailablePortsNames();
-void NativeFreeAvailablePortsNames(char **result);
-
-serial_handle_t* NativeOpen(char* device);
+char** get_available_ports_names();
+void free_available_ports_names(char **result);
 
 #endif

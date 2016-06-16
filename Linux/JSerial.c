@@ -6,6 +6,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <jni.h>
+
 #include "JSerial.h"
 
 struct serial_handle {
@@ -16,20 +18,20 @@ struct serial_handle {
 /**
  * Opens the specified device and returns an opaque handle, or NULL.
  */
-serial_handle_t* NativeOpen(char* device) {
-    int fd = open(device, O_RDWR | O_NONBLOCK | O_NOCTTY);
-    if (fd == -1)
-        return NULL;
-    struct termios termios;
-    if(tcgetattr(fd, &termios) != 0) {
-        close(fd);
-        return NULL;
-    }
-    serial_handle_t* handle = malloc(sizeof(serial_handle_t));
-    handle->fd = fd;
-    handle->termios = termios;
-    return handle;
-}
+//serial_handle_t* NativeOpen(char* device) {
+//    int fd = open(device, O_RDWR | O_NONBLOCK | O_NOCTTY);
+//    if (fd == -1)
+//        return NULL;
+//    struct termios termios;
+//    if(tcgetattr(fd, &termios) != 0) {
+//        close(fd);
+//        return NULL;
+//    }
+//    serial_handle_t* handle = malloc(sizeof(serial_handle_t));
+//    handle->fd = fd;
+//    handle->termios = termios;
+//    return handle;
+//}
 
 /**
  * Get a list of available serial ports.
@@ -37,7 +39,7 @@ serial_handle_t* NativeOpen(char* device) {
  * This function try to open every device matching /dev/tty* to get
  * some serial-specific information on the file descriptor.
  *
- * If it succeeds(tcgetattr does not return an error) we consider
+ * If it succeeds (tcgetattr does not return an error) we consider
  * the device to be a valid serial port.
  *
  * This solution does not perform very well, and works only if the
@@ -45,7 +47,7 @@ serial_handle_t* NativeOpen(char* device) {
  *
  * Returns an null-terminated array of serial devices paths.
  */
-char** NativeGetAvailablePortsNames() {
+char** get_available_ports_names() {
 
     glob_t glob_results;
 
@@ -84,7 +86,7 @@ char** NativeGetAvailablePortsNames() {
 /**
  * Free the string array allocated by NativeGetAvailablePortsNames().
  */
-void NativeFreeAvailablePortsNames(char **result) {
+void free_available_ports_names(char **result) {
     char **temp = result, *portName;
     while ((portName = *result) != NULL) {
         free(portName);

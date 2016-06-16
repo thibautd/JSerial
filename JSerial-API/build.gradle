@@ -1,0 +1,9 @@
+apply plugin: 'java'
+
+group 'dk.thibaut'
+version '1.1.0-SNAPSHOT'
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    testRuntime project(':JSerial-Linux')
+}

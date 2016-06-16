@@ -2,4 +2,5 @@ apply plugin: 'java'
 
 dependencies {
     compile project(':JSerial-API')
+    testCompile 'junit:junit:4.12'
 }

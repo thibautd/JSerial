@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.channels.ClosedChannelException;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class represents a physical serial port.
@@ -25,40 +25,31 @@ import java.util.List;
  * {@link #getOutputStream()} and {@link #getInputStream()} functions
  * are available.
  */
-public abstract class SerialPort {
-
-    private static Class nativeClass;
-    private static Constructor nativeConstructor;
-    private static Method nativeGetAvailablePorts;
+public class SerialPort {
 
     public static final int TIMEOUT_INFINITE = -1;
     public static final int TIMEOUT_IMMEDIATE = 0;
 
+    private static SerialNative serialNative;
+
     static {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.startsWith("windows"))
-            nativeClass = SerialPortWindows.class;
-        else if (os.startsWith("linux"))
-            nativeClass = SerialPortLinux.class;
-        else
-            throw new RuntimeException("Unsupported platform");
-
-        try {
-            nativeGetAvailablePorts = nativeClass.getDeclaredMethod("getAvailablePortsNamesImpl");
-            nativeGetAvailablePorts.setAccessible(true);
-            nativeConstructor = nativeClass.getDeclaredConstructor(String.class);
-            nativeConstructor.setAccessible(true);
-        } catch (Exception err) {
-            throw new RuntimeException("Error while loading native class", err);
+        ServiceLoader<SerialNative> loader = ServiceLoader.load(SerialNative.class);
+        for (SerialNative serialNative : loader) {
+            if (serialNative.forCurrentPlatform()) {
+                SerialPort.serialNative = serialNative;
+                break;
+            }
+        }
+        if (SerialPort.serialNative == null) {
+            throw new RuntimeException("No serial implementation for the current platform.");
         }
     }
 
-    protected InputStream inputStream;
-    protected OutputStream outputStream;
-    protected String name;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private String name;
 
-    protected SerialPort(String portName) {
+    private SerialPort(String portName) {
         this.name = portName;
     }
 
@@ -71,11 +62,7 @@ public abstract class SerialPort {
      * @return A list of ports names.
      */
     public static List<String> getAvailablePortsNames() {
-        try {
-            return (List<String>) nativeGetAvailablePorts.invoke(null);
-        } catch (IllegalAccessException|InvocationTargetException err) {
-            throw new RuntimeException("Unexpected error while invoking native method.", err);
-        }
+        return Arrays.asList(serialNative.getAvailablePortsNames());
     }
 
     /**
@@ -94,13 +81,9 @@ public abstract class SerialPort {
      * @throws RuntimeException If the platform is not supported.
      */
     public static SerialPort open(String portName) throws IOException {
-        try {
-            return (SerialPort) nativeConstructor.newInstance(portName);
-        } catch (InstantiationException|IllegalAccessException err) {
-            throw new RuntimeException("Unexpected error while invoking native constructor.", err);
-        } catch (InvocationTargetException err) {
-            throw (IOException) err.getTargetException();
-        }
+        SerialPort serialPort = new SerialPort(portName);
+        //serialNative.open(serialPort, portName);
+        return serialPort;
     }
 
     /**
@@ -158,7 +141,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract void setConfig(SerialConfig config) throws IOException;
+    public void setConfig(SerialConfig config) throws IOException {
+
+    }
 
     /**
      * Returns the current configuration of this port.
@@ -166,7 +151,9 @@ public abstract class SerialPort {
      * @return A SerialConfig object containing current settings.
      * @throws IOException If an error occurs when calling the native function.
      */
-    public abstract SerialConfig getConfig() throws IOException;
+    public SerialConfig getConfig() throws IOException {
+        return null;
+    }
 
     /**
      * Sets the read timeout for this port.
@@ -181,7 +168,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract void setTimeout(int timeout) throws IOException;
+    public void setTimeout(int timeout) throws IOException {
+
+    }
 
     /**
      * Get the current read timeout.
@@ -193,7 +182,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract int getTimeout() throws IOException;
+    public int getTimeout() throws IOException {
+        return TIMEOUT_IMMEDIATE;
+    }
 
     /**
      * Get the associated {@link SerialChannel} that can used to read and write data.
@@ -203,7 +194,9 @@ public abstract class SerialPort {
      * @return A unique instance of {@link SerialChannel}
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract SerialChannel getChannel() throws IOException;
+    public SerialChannel getChannel() throws IOException {
+        return null;
+    }
 
     /**
      * Get the current opening status of the port.
@@ -213,7 +206,9 @@ public abstract class SerialPort {
      *
      * @return True is the port is opened, false if it has been close.
      */
-    public abstract boolean isOpen();
+    public boolean isOpen() {
+        return false;
+    }
 
     /**
      * Close the port.
@@ -222,7 +217,9 @@ public abstract class SerialPort {
      *
      * @throws IOException If an error occurs when calling the native function.
      */
-    public abstract void close() throws IOException;
+    public void close() throws IOException {
+
+    }
 
     /**
      * Set the RTS (Request To Send) signal.
@@ -231,7 +228,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract void setRts(boolean enabled) throws IOException;
+    public void setRts(boolean enabled) throws IOException {
+
+    }
 
     /**
      * Set the DTR (Data Terminal Ready) signal.
@@ -240,7 +239,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract void setDtr(boolean enabled) throws IOException;
+    public void setDtr(boolean enabled) throws IOException {
+
+    }
 
     /**
      * Get the CTS (Clear to send) signal's state.
@@ -249,7 +250,9 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract boolean getCts() throws IOException;
+    public boolean getCts() throws IOException {
+        return false;
+    }
 
     /**
      * Get the DSR (Data set ready) signal's state.
@@ -258,6 +261,8 @@ public abstract class SerialPort {
      * @throws IOException If an error occurs when calling the native function.
      * @throws ClosedChannelException If the serial port is closed.
      */
-    public abstract boolean getDsr() throws IOException;
+    public boolean getDsr() throws IOException {
+        return false;
+    }
 
 }

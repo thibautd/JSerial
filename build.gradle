@@ -1,0 +1,32 @@
+evaluationDependsOnChildren()
+
+subprojects {
+
+    repositories {
+        jcenter();
+    }
+
+    sourceSets {
+        main {
+            java { srcDir 'src' }
+            resources { srcDir 'resources' }
+        }
+        test {
+            java { srcDir 'test' }
+        }
+    }
+
+    sourceCompatibility = 1.8
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    artifacts {
+        archives javadocJar
+    }
+
+    javadoc.options.links("http://docs.oracle.com/javase/8/docs/api/");
+    javadoc.options.showFromPublic()
+}

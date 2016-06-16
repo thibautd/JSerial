@@ -20,24 +20,18 @@
  * THE SOFTWARE.
  */
 
-package dk.thibaut.serial.spi;
-
-import java.util.List;
-import java.util.ServiceLoader;
-
-import dk.thibaut.serial.SerialPort;
+package dk.thibaut.serial;
 
 /**
- * This interface must be implemented by platform providers.
- * <p>
- * The {@link SerialPort} class will use a {@link ServiceLoader} to find an
- * implementation of this interface at runtime and use it to handle the
- * platform-specific {@link SerialPort} methods.
- * 
+ * A {@link SerialNative} implementation for windows x86/x64.
+ *
  * @since 1.1
  * @author Thibaut DIRLIK
  */
-public interface SerialPortPlatformProvider {
-    public List<String> getAvailablePortsNames();
-    public SerialPort open(String portName);
+public class SerialNativeWindows extends SerialNative {
+
+    @Override
+    boolean forCurrentPlatform() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
+    }
 }

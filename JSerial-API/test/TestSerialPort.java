@@ -95,6 +95,12 @@ public class TestSerialPort {
         portWrite.close();
     }
 
+    public void testGetPortsNames() {
+        List<String> portsNames = SerialPort.getAvailablePortsNames();
+        assertTrue(portsNames.contains(PORT_READ));
+        assertTrue(portsNames.contains(PORT_WRITE));
+    }
+
     @Test(expected = SerialException.class)
     public void testOpenFails() throws IOException {
         SerialPort.open("COM254");
