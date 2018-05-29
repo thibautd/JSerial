@@ -53,7 +53,7 @@ port.setConfig(BaudRate.B115200, Parity.NONE, StopBits.ONE, DataBits.B8);
 // You have the choice, you can either use the Java NIO channels
 // or classic Input/Ouput streams to read and write data.
 SerialChannel channel = port.getChannel();
-InputStream istream = port.getInputStream()
+InputStream istream = port.getInputStream();
 
 // Read some data using a stream
 byte[] byteBuffer = new byte[4096];
