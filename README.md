@@ -47,7 +47,7 @@ List<String> portsNames = SerialPort.getAvailablePortsNames();
 SerialPort port = SerialPort.open("COM2");
 
 // Configure the connection
-port.setTimeout(100)
+port.setTimeout(100):
 port.setConfig(BaudRate.B115200, Parity.NONE, StopBits.ONE, DataBits.B8);
 
 // You have the choice, you can either use the Java NIO channels
