@@ -1,3 +1,5 @@
+**I'm no longer working on this project (no new platform), but I still support it for bugfix.**
+
 # JSerial
 
 JSerial aims to be an **easy to use**, well **documented** and **cross-platform** serial library for Java. JSerial is distributed under the term of the MIT licence (you can use it in closed source applications).
@@ -8,8 +10,6 @@ Currently, only the following platforms are supported :
 * Windows x64
 
 The code is easy to understand, documented and unit tested. If you want to contribute, please get in touch if you need help, contributions are really welcome (especially new platforms support !).
-
-** I'm no longer working on this project, but if you find any issue I'll do my best to fix it. **
 
 # Installation
 
