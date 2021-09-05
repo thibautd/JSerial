@@ -9,6 +9,8 @@ Currently, only the following platforms are supported :
 
 The code is easy to understand, documented and unit tested. If you want to contribute, please get in touch if you need help, contributions are really welcome (especially new platforms support !).
 
+** I'm no longer working on this project, but if you find any issue I'll do my best to fix it. **
+
 # Installation
 
 You can download the latest available JAR, including all-supported platforms on the [releases](https://github.com/thibautd/JSerial/releases) page.
